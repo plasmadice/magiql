@@ -1,14 +1,21 @@
+console.time("start");
 var mongoose = require("mongoose");
 require("dotenv").config();
-console.log(process.env.DB_CONNECT);
 const DB_CONNECT = process.env.DB_CONNECT;
+
+// const data = require("./scryfall-default-cards.json");
+
+// const readyData = data.map(item => {
+//   item.json = JSON.stringify(item);
+//   return item;
+// });
 
 mongoose.connect(DB_CONNECT, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
 
-var LegalitiesSchema = new mongoose.Schema({
+var legalitiesSchema = new mongoose.Schema({
   standard: String,
   future: String,
   historic: String,
@@ -23,8 +30,8 @@ var LegalitiesSchema = new mongoose.Schema({
   duel: String,
   oldschool: String
 });
-var ImageLinkSchema = new m();
-ongoose.Schema({
+
+var imageLinkSchema = new mongoose.Schema({
   small: String,
   normal: String,
   large: String,
@@ -33,54 +40,54 @@ ongoose.Schema({
   png: String
 });
 
-var PricesSchema = new mongoose.Schema({
+var pricesSchema = new mongoose.Schema({
   usd: String,
   usd_foil: String,
   eur: String,
   tix: String
 });
 
-var PurchaseLinkSchema = new mongoose.Schema({
+var purchaseLinkSchema = new mongoose.Schema({
   tcgplayer: String,
   cardmarket: String,
   cardhoarder: String
 });
 
-var RelatedLinkSchema = new mongoose.Schema({
+var relatedLinkSchema = new mongoose.Schema({
   gatherer: String,
   tcgplayer_decks: String,
   edhrec: String,
   mtgtop8: String
 });
 
-var PreviewSchema = new mongoose.Schema({
+var previewSchema = new mongoose.Schema({
   source: String,
   source_uri: String,
-  previewed_at: Date
+  previewed_at: String
 });
 
-var MultiFaceSchema = new mongoose.Schema({
+var multiFaceSchema = new mongoose.Schema({
   artist: String,
   color_indicator: { type: [String], default: undefined },
   colors: { type: [String], default: undefined }, // if empty [] === colorless else (null or missing) === not pertinent
   flavor_text: String,
-  illustration_id: mongoose.ObjectId,
-  image_uris: ImageLinkSchema,
+  illustration_id: String,
+  image_uris: imageLinkSchema,
   loyalty: String,
-  mana_cost: { type: String, required: true },
-  name: { type: String, required: true },
-  object: { type: String, required: true },
+  mana_cost: String,
+  name: String,
+  object: String,
   oracle_text: String,
   power: String,
   printed_name: String,
   printed_type_line: String,
   toughness: String,
-  type_line: { type: String, required: true },
+  type_line: String,
   watermark: String
 });
 
-var RelatedCardsSchema = new mongoose.Schema({
-  id: { type: mongoose.ObjectId, required: true },
+var relatedCardsSchema = new mongoose.Schema({
+  id: { type: String, required: true },
   object: { type: String, required: true },
   component: { type: String, required: true },
   name: { type: String, required: true },
@@ -88,25 +95,25 @@ var RelatedCardsSchema = new mongoose.Schema({
   uri: { type: String, required: true }
 });
 
-var CardSchema = new mongoose.Schema({
+var cardSchema = new mongoose.Schema({
   // Core Card Fields
   arena_id: Number,
-  id: { type: mongoose.ObjectId, required: true },
+  id: { type: String, required: true },
   lang: { type: String, required: true },
   mtgo_id: Number,
   mtgo_foil_id: Number,
   multiverse_ids: { type: [Number], default: undefined },
   tcgplayer_id: Number,
   object: { type: String, required: true },
-  oracle_id: { type: mongoose.ObjectId, required: true },
+  oracle_id: { type: String, required: true },
   prints_search_uri: { type: String, required: true },
   rulings_uri: { type: String, required: true },
   scryfall_uri: { type: String, required: true },
   uri: { type: String, required: true },
 
   // Gameplay Fields
-  all_parts: RelatedCardsSchema,
-  card_faces: MultiFaceSchema,
+  all_parts: [relatedCardsSchema],
+  card_faces: [multiFaceSchema],
   cmc: { type: Number, required: true },
   colors: { type: [String], default: undefined }, // if empty [] === colorless else (null or missing) === not pertinent
   color_identity: { type: [String], default: undefined, required: true },
@@ -115,7 +122,7 @@ var CardSchema = new mongoose.Schema({
   foil: { type: Boolean, required: true },
   hand_modifier: String,
   layout: { type: String, required: true },
-  legalities: { type: LegalitiesSchema, required: true },
+  legalities: { type: legalitiesSchema, required: true },
   life_modifier: String,
   loyalty: String,
   mana_cost: String,
@@ -126,13 +133,13 @@ var CardSchema = new mongoose.Schema({
   power: String,
   reserved: { type: Boolean, required: true },
   toughness: String,
-  type_line: { type: Boolean, required: true },
+  type_line: { type: String, required: true },
 
   // Print Fields
   artist: String,
   booster: { type: Boolean, required: true },
   border_color: { type: String, required: true },
-  card_back_id: { type: mongoose.ObjectId, required: true },
+  card_back_id: { type: String, required: true },
   collector_number: { type: String, required: true },
   digital: { type: Boolean, required: true },
   flavor_text: String,
@@ -141,18 +148,18 @@ var CardSchema = new mongoose.Schema({
   full_art: { type: Boolean, required: true },
   games: { type: [String], required: true },
   highres_image: { type: Boolean, required: true },
-  illustration_id: mongoose.ObjectId,
-  image_uris: ImageLinkSchema,
-  preview: PreviewSchema,
-  prices: { type: PricesSchema, required: true },
+  illustration_id: String,
+  image_uris: imageLinkSchema,
+  preview: previewSchema,
+  prices: pricesSchema,
   printed_name: String,
   printed_text: String,
   printed_type_line: String,
   promo_types: { type: [String], default: undefined },
-  purchase_uris: { type: PurchaseLinkSchema, required: true },
+  purchase_uris: purchaseLinkSchema,
   rarity: { type: String, required: true },
-  related_uris: { type: RelatedLinkSchema, required: true },
-  released_at: { type: Date, required: true },
+  related_uris: { type: relatedLinkSchema, required: true },
+  released_at: { type: String, required: true },
   reprint: { type: Boolean, required: true },
   scryfall_set_uri: { type: String, required: true },
   set_name: { type: String, required: true },
@@ -165,14 +172,24 @@ var CardSchema = new mongoose.Schema({
   variation: { type: Boolean, required: true },
   variation_of: String,
   watermark: String,
-
-  // Card Face Objects || Minus duplicates
-  color_indicator: String
+  json: { type: String, required: true }
 });
 
 var db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", function() {
-  console.log("We're connected!");
   // we're connected!
+});
+
+var Card = mongoose.model("Card", cardSchema);
+
+// Card.insertMany(readyData, (err, documents) => {
+//   if (err) console.error(err);
+//   console.log("Operation complete");
+//   console.timeLog("start");
+// });
+
+Card.find({ name: /hi/i }, (err, doc) => {
+  console.log(doc.length);
+  console.timeLog("start");
 });

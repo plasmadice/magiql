@@ -2,6 +2,9 @@ console.time("start");
 var mongoose = require("mongoose");
 require("dotenv").config();
 const DB_CONNECT = process.env.DB_CONNECT;
+var schemas = require("./schemas");
+
+console.log(schemas.Card);
 
 // const data = require("./scryfall-default-cards.json");
 
@@ -178,6 +181,7 @@ var cardSchema = new mongoose.Schema({
 var db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", function() {
+  console.log("Connected to MongoDB server");
   // we're connected!
 });
 
@@ -189,7 +193,7 @@ var Card = mongoose.model("Card", cardSchema);
 //   console.timeLog("start");
 // });
 
-Card.find({ name: /hi/i }, (err, doc) => {
-  console.log(doc.length);
-  console.timeLog("start");
-});
+// Card.find({ name: /hi/i }, (err, doc) => {
+//   console.log(doc.length);
+//   console.timeLog("start");
+// });

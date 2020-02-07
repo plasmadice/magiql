@@ -1,12 +1,15 @@
-const fastify = require('fastify')({
+const fastify = require("fastify")({
   logger: true
 });
-const mongoose = require('mongoose')
-const dotenv = require('dotenv').config();
+const mongoose = require("mongoose");
+const dotenv = require("dotenv").config();
 
 mongoose
-	.connect(process.env.DB_Connect);
-	.then(() => console.log('MongoDB connected...'))
-	.catch(err => console.log(err))
+  .connect(process.env.DB_CONNECT, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  .then(() => console.log("MongoDB connected..."))
+  .catch(err => console.log(err));
 
-module.exports = fastify
+module.exports = fastify;

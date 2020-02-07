@@ -4,8 +4,6 @@ require("dotenv").config();
 const DB_CONNECT = process.env.DB_CONNECT;
 var schemas = require("./schemas");
 
-console.log(schemas.Card);
-
 // const data = require("./scryfall-default-cards.json");
 
 // const readyData = data.map(item => {

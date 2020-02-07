@@ -162,6 +162,7 @@ var cardSchema = new mongoose.Schema({
 
 module.exports = {
   Card: cardSchema,
+  MultiFace: multiFaceSchema,
   ImageLink: imageLinkSchema,
   Legalities: legalitiesSchema,
   Preview: previewSchema,

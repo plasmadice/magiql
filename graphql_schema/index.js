@@ -6,10 +6,8 @@ const {
   GraphQLSchema,
   GraphQLObjectType,
   GraphQLString,
-  GraphQLInt,
   GraphQLID,
-  GraphQLList,
-  GraphQLNonNull
+  GraphQLList
 } = graphql;
 
 // Import Controllers
@@ -27,14 +25,27 @@ const cardType = new GraphQLObjectType({
 // Define Root Query
 const RootQuery = new GraphQLObjectType({
   name: "RootQueryType",
-  fields: {
-    id: {},
-    name: {}
-  }
+  fields: () => ({
+    card: {
+      type: { cardType },
+      description: "Returns a single card using it's graphql _id",
+      args: { _id: { type: GraphQLID } },
+      async resolve(parent, args) {
+        return await cardController.getCardById(args);
+      }
+    },
+    cards: {
+      type: new GraphQLList(cardType),
+      description: "Returns multiple cards using a name value.",
+      args: { name: { type: GraphQLString } },
+      async resolve(parent, args) {
+        return await cardController.getCardsByName(args);
+      }
+    }
+  })
 });
 
 // Export the schema
 module.exports = new GraphQLSchema({
-  query: RootQuery,
-  mutation: Mutations
+  query: RootQuery
 });

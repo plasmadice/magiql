@@ -1,5 +1,16 @@
 const mongoose = require("mongoose");
+const schemas = require("../schemas");
 // TODO: import other things
+const {
+  ImageLink,
+  Legalities,
+  MultiFace,
+  Preview,
+  Prices,
+  PurchaseLink,
+  RelatedCards,
+  RelatedLink
+} = schemas;
 
 var cardSchema = new mongoose.Schema({
   // Core Card Fields
@@ -18,8 +29,8 @@ var cardSchema = new mongoose.Schema({
   uri: { type: String, required: true },
 
   // Gameplay Fields
-  all_parts: [relatedCardsSchema],
-  card_faces: [multiFaceSchema],
+  all_parts: [RelatedCards],
+  card_faces: [MultiFace],
   cmc: { type: Number, required: true },
   colors: { type: [String], default: undefined }, // if empty [] === colorless else (null or missing) === not pertinent
   color_identity: { type: [String], default: undefined, required: true },
@@ -28,7 +39,7 @@ var cardSchema = new mongoose.Schema({
   foil: { type: Boolean, required: true },
   hand_modifier: String,
   layout: { type: String, required: true },
-  legalities: { type: legalitiesSchema, required: true },
+  legalities: { type: Legalities, required: true },
   life_modifier: String,
   loyalty: String,
   mana_cost: String,
@@ -55,16 +66,16 @@ var cardSchema = new mongoose.Schema({
   games: { type: [String], required: true },
   highres_image: { type: Boolean, required: true },
   illustration_id: String,
-  image_uris: imageLinkSchema,
-  preview: previewSchema,
-  prices: pricesSchema,
+  image_uris: ImageLink,
+  preview: Preview,
+  prices: Prices,
   printed_name: String,
   printed_text: String,
   printed_type_line: String,
   promo_types: { type: [String], default: undefined },
-  purchase_uris: purchaseLinkSchema,
+  purchase_uris: PurchaseLink,
   rarity: { type: String, required: true },
-  related_uris: { type: relatedLinkSchema, required: true },
+  related_uris: { type: RelatedLink, required: true },
   released_at: { type: String, required: true },
   reprint: { type: Boolean, required: true },
   scryfall_set_uri: { type: String, required: true },

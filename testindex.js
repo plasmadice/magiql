@@ -2,35 +2,37 @@
 const fastify = require("./server.js");
 
 // Import external dependancies
-const gql = require("fastify-gql");
+const GQL = require("fastify-gql");
 
 // Import GraphQL Schema
-const schema = require("./schema");
+const schema = require("./graphql_schema");
 
 // Register Fastify GraphQL
-fastify.register(gql, {
-  schema,
+fastify.register(GQL, {
+  schema: schema,
   graphiql: true
 });
 
 // Import Routes
-const routes = require("./routes");
+// const routes = require("./routes");
 
 // Import Swagger Options
 const swagger = require("./config/swagger");
-
 // Register Swagger
 fastify.register(require("fastify-swagger"), swagger.options);
 
 // Loop over each route
-routes.forEach((route, index) => {
-  fastify.route(route);
-});
+// const route = {
+//   method: "GET",
+//   url: "/",
+//   handler: () => console.log("goofed")
+// };
 
-// Run the server!
+// fastify.route(route);
+
 const start = async () => {
   try {
-    await fastify.listen(3000, "0.0.0.0");
+    await fastify.listen(3000, "127.0.0.1");
     fastify.swagger();
     fastify.log.info(`server listening on ${fastify.server.address().port}`);
   } catch (err) {

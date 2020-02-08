@@ -27,7 +27,7 @@ const RootQuery = new GraphQLObjectType({
   name: "RootQueryType",
   fields: () => ({
     card: {
-      type: { cardType },
+      type: cardType,
       description: "Returns a single card using it's graphql _id",
       args: { _id: { type: GraphQLID } },
       async resolve(parent, args) {

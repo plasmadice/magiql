@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "./node_modules/nodemon/bin/nodemon.js ./testindex.js",
+    "start": "nodemon testindex.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -12,12 +12,11 @@
   "license": "ISC",
   "dependencies": {
     "@hapi/boom": "^9.0.0",
+    "apollo-server-fastify": "^2.10.0",
     "boom": "^7.3.0",
     "dotenv": "^8.2.0",
     "fastify": "^2.12.0",
-    "fastify-gql": "^3.0.3",
     "fastify-mongodb": "^2.0.0",
-    "fastify-swagger": "^2.5.0",
     "graphql": "^14.6.0",
     "mongoose": "^5.8.11"
   },

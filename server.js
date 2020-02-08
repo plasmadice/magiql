@@ -1,6 +1,9 @@
-const fastify = require("fastify")({
-  logger: true
-});
+// const fastify = require("fastify")({
+//   logger: true
+// });
+
+const Fastify = require("fastify");
+const fastify = Fastify();
 const mongoose = require("mongoose");
 const dotenv = require("dotenv").config();
 

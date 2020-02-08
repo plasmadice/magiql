@@ -35,7 +35,7 @@ exports.getCardByScryfallId = async req => {
 exports.getCardsByName = async req => {
   try {
     const cardName = req.params === undefined ? req.name : req.params.name;
-    const re = new RegExp(cardName);
+    const re = new RegExp(cardName, "i");
     const cards = await Card.find({ name: re });
     return cards;
   } catch (err) {

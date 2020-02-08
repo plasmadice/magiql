@@ -123,7 +123,18 @@ const cardType = new GraphQLObjectType({
     reserved: { type: GraphQLBoolean },
     toughness: { type: GraphQLString },
     type_line: { type: GraphQLString },
-
+    artist: { type: GraphQLString },
+    booster: { type: GraphQLBoolean },
+    border_color: { type: GraphQLString },
+    card_back_id: { type: GraphQLString },
+    collector_number: { type: GraphQLString },
+    flavor_text: { type: GraphQLString },
+    frame_effects: { type: new GraphQLList(GraphQLString) },
+    frame: { type: GraphQLString },
+    full_art: { type: GraphQLBoolean },
+    games: { type: new GraphQLList(GraphQLString) },
+    highres_image: { type: GraphQLBoolean },
+    illustration_id: { type: GraphQLString },
     name: { type: GraphQLString }
   })
 });

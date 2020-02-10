@@ -24,8 +24,9 @@ exports.getCardById = async req => {
 
 exports.getCardById = async req => {
   try {
-    const id = req.id === undefined ? req._id : req.id; // example with REST using routes
-    const card = await Card.findOne({ id: id });
+    const card;
+    if (req.id) card = await Card.findOne({ id: req.id });
+    if (req._id) card = await Card.findOne({ _id: req._id });
     return card;
   } catch (err) {
     throw boom.boomify(err);

@@ -220,8 +220,11 @@ const RootQuery = new GraphQLObjectType({
   fields: () => ({
     card: {
       type: cardType,
-      description: "Returns a single card using it's MongoDB _id",
-      args: { _id: { type: GraphQLID } },
+      description: "Returns a single card using one of it's IDs",
+      args: {
+        _id: { type: GraphQLID },
+        id: { type: GraphQLBoolean }
+      },
       async resolve(parent, args) {
         return await cardController.getCardById(args);
       }

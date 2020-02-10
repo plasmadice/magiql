@@ -22,9 +22,9 @@ exports.getCardById = async req => {
   }
 };
 
-exports.getCardByScryfallId = async req => {
+exports.getCardById = async req => {
   try {
-    const id = req.params === undefined ? req.id : req.params.id; // example with REST using routes
+    const id = req.id === undefined ? req._id : req.id; // example with REST using routes
     const card = await Card.findOne({ id: id });
     return card;
   } catch (err) {

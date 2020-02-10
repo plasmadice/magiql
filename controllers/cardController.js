@@ -24,10 +24,11 @@ exports.getCardById = async req => {
 
 exports.getCardById = async req => {
   try {
-    const card;
-    if (req.id) card = await Card.findOne({ id: req.id });
-    if (req._id) card = await Card.findOne({ _id: req._id });
-    return card;
+    if (req.id) {
+      return await Card.findOne({ id: req.id });
+    } else if (req._id) {
+      return await Card.findOne({ _id: req._id });
+    }
   } catch (err) {
     throw boom.boomify(err);
   }

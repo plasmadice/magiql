@@ -220,10 +220,10 @@ const RootQuery = new GraphQLObjectType({
   fields: () => ({
     card: {
       type: cardType,
-      description: "Returns a single card using one of it's IDs",
+      description: "Returns a single card using one of it's IDs (id && _id)",
       args: {
         _id: { type: GraphQLID },
-        id: { type: GraphQLBoolean }
+        id: { type: GraphQLString }
       },
       async resolve(parent, args) {
         return await cardController.getCardById(args);
@@ -231,7 +231,7 @@ const RootQuery = new GraphQLObjectType({
     },
     cards: {
       type: new GraphQLList(cardType),
-      description: "Returns multiple cards using a name value.",
+      description: "Returns card(s) using a name value.",
       args: { name: { type: GraphQLString } },
       async resolve(parent, args) {
         return await cardController.getCardsByName(args);

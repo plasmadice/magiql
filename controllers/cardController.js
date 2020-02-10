@@ -1,5 +1,12 @@
 const boom = require("@hapi/boom");
 const Card = require("../models/Card");
+const DataLoader = require("dataloader");
+
+const cardLoader = new DataLoader(key => {
+  return this.getCard(key);
+});
+
+const batchCardLoader = new DataLoader(keys => {});
 
 // Get All Cards ... maybe don't use this
 exports.getCards = async () => {
@@ -12,7 +19,7 @@ exports.getCards = async () => {
 };
 
 // Get single Card by ID
-exports.getCardById = async req => {
+exports.getCard = async req => {
   try {
     const id = req.params === undefined ? req.id : req.params.id; // example with REST using routes
     const card = await Card.findById(id);

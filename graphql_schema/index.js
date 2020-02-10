@@ -15,9 +15,29 @@ const {
 // Import Controllers
 const cardController = require("../controllers/cardController");
 
+const previewType = new GraphQLObjectType({
+  name: "Preview",
+  fields: () => ({
+    source: { type: GraphQLString },
+    source_uri: { type: GraphQLString },
+    previewed_at: { type: GraphQLString }
+  })
+});
+
+const pricesType = new GraphQLObjectType({
+  name: "Prices",
+  fields: () => ({
+    usd: { type: GraphQLString },
+    usd_foil: { type: GraphQLString },
+    eur: { type: GraphQLString },
+    tix: { type: GraphQLString }
+  })
+});
+
 const legalitiesType = new GraphQLObjectType({
   name: "Legalities",
   fields: () => ({
+    _id: { type: GraphQLID },
     standard: { type: GraphQLString },
     future: { type: GraphQLString },
     historic: { type: GraphQLString },
@@ -135,6 +155,14 @@ const cardType = new GraphQLObjectType({
     games: { type: new GraphQLList(GraphQLString) },
     highres_image: { type: GraphQLBoolean },
     illustration_id: { type: GraphQLString },
+    image_uris: { type: imageLinkType },
+    preview: { type: previewType },
+    prices: { type: pricesType },
+    printed_name: { type: GraphQLString },
+    printed_text: { type: GraphQLString },
+    printed_type_line: { type: GraphQLString },
+    promo_type: { type: new GraphQLList(GraphQLString) },
+    //purchase_uris: {type: purchaseLinkType},
     name: { type: GraphQLString }
   })
 });
@@ -145,7 +173,7 @@ const RootQuery = new GraphQLObjectType({
   fields: () => ({
     card: {
       type: cardType,
-      description: "Returns a single card using it's graphql _id",
+      description: "Returns a single card using it's MongoDB _id",
       args: { _id: { type: GraphQLID } },
       async resolve(parent, args) {
         return await cardController.getCardById(args);

@@ -15,9 +15,34 @@ const {
 // Import Controllers
 const cardController = require("../controllers/cardController");
 
+const relatedLinkType = new GraphQLObjectType({
+  name: "RelatedLink",
+  description: "Links related to the card.",
+  fields: () => ({
+    _id: { type: GraphQLID },
+    gatherer: { type: GraphQLString },
+    tcgplayer_decks: { type: GraphQLString },
+    edhrec: { type: GraphQLString },
+    mtgtop8: { type: GraphQLString }
+  })
+});
+
+const purchaseLinkType = new GraphQLObjectType({
+  name: "PurchaseLink",
+  description: "Links leading to places where the card can be purchased.",
+  fields: () => ({
+    _id: { type: GraphQLID },
+    tcgplayer: { type: GraphQLString },
+    cardmarket: { type: GraphQLString },
+    cardhoarder: { type: GraphQLString }
+  })
+});
+
 const previewType = new GraphQLObjectType({
   name: "Preview",
+  description: "Info related to the preview of the card if available.",
   fields: () => ({
+    _id: { type: GraphQLID },
     source: { type: GraphQLString },
     source_uri: { type: GraphQLString },
     previewed_at: { type: GraphQLString }
@@ -26,7 +51,9 @@ const previewType = new GraphQLObjectType({
 
 const pricesType = new GraphQLObjectType({
   name: "Prices",
+  description: "Price of the card in different currencies.",
   fields: () => ({
+    _id: { type: GraphQLID },
     usd: { type: GraphQLString },
     usd_foil: { type: GraphQLString },
     eur: { type: GraphQLString },
@@ -36,6 +63,7 @@ const pricesType = new GraphQLObjectType({
 
 const legalitiesType = new GraphQLObjectType({
   name: "Legalities",
+  description: "Legality of this card in different formats.",
   fields: () => ({
     _id: { type: GraphQLID },
     standard: { type: GraphQLString },
@@ -56,6 +84,7 @@ const legalitiesType = new GraphQLObjectType({
 
 const imageLinkType = new GraphQLObjectType({
   name: "ImageLink",
+  description: "Images of the card.",
   fields: () => ({
     _id: { type: GraphQLID },
     small: { type: GraphQLString },
@@ -69,6 +98,7 @@ const imageLinkType = new GraphQLObjectType({
 
 const relatedCardsType = new GraphQLObjectType({
   name: "RelatedCards",
+  description: "Cards related to the card.",
   fields: () => ({
     _id: { type: GraphQLID },
     id: { type: GraphQLString },
@@ -82,6 +112,7 @@ const relatedCardsType = new GraphQLObjectType({
 
 const multiFaceType = new GraphQLObjectType({
   name: "MultiFace",
+  description: "Information about the 'other' side of the card.",
   fields: () => ({
     _id: { type: GraphQLID },
     artist: { type: GraphQLString },
@@ -107,6 +138,7 @@ const multiFaceType = new GraphQLObjectType({
 // Define Object Types
 const cardType = new GraphQLObjectType({
   name: "Card",
+  description: "A unique card object for every MTG card",
   fields: () => ({
     _id: { type: GraphQLID },
     arena_id: { type: GraphQLInt },
@@ -162,8 +194,23 @@ const cardType = new GraphQLObjectType({
     printed_text: { type: GraphQLString },
     printed_type_line: { type: GraphQLString },
     promo_type: { type: new GraphQLList(GraphQLString) },
-    //purchase_uris: {type: purchaseLinkType},
-    name: { type: GraphQLString }
+    purchase_uris: { type: purchaseLinkType },
+    rarity: { type: GraphQLString },
+    related_uris: { type: relatedLinkType },
+    released_at: { type: GraphQLString },
+    reprint: { type: GraphQLBoolean },
+    scryfall_set_uri: { type: GraphQLString },
+    set_name: { type: GraphQLString },
+    set_search_uri: { type: GraphQLString },
+    set_type: { type: GraphQLString },
+    set_uri: { type: GraphQLString },
+    set: { type: GraphQLString },
+    story_spotlight: { type: GraphQLBoolean },
+    textless: { type: GraphQLBoolean },
+    variation: { type: GraphQLBoolean },
+    variation_of: { type: GraphQLString },
+    watermark: { type: GraphQLString },
+    json: { type: GraphQLString }
   })
 });
 

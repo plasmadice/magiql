@@ -14,7 +14,7 @@ exports.getCards = async () => {
 // Get single Card by ID
 exports.getCardById = async req => {
   try {
-    const id = req.params === undefined ? req.i : req.params.id;
+    const id = req.params === undefined ? req.id : req.params.id; // example with REST using routes
     const card = await Card.findById(id);
     return card;
   } catch (err) {
@@ -24,7 +24,7 @@ exports.getCardById = async req => {
 
 exports.getCardByScryfallId = async req => {
   try {
-    const id = req.params === undefined ? req.id : req.params.id;
+    const id = req.params === undefined ? req.id : req.params.id; // example with REST using routes
     const card = await Card.findOne({ id: id });
     return card;
   } catch (err) {
@@ -34,7 +34,7 @@ exports.getCardByScryfallId = async req => {
 
 exports.getCardsByName = async req => {
   try {
-    const cardName = req.params === undefined ? req.name : req.params.name;
+    const cardName = req.params === undefined ? req.name : req.params.name; // example with REST using routes
     const re = new RegExp(cardName, "i");
     const cards = await Card.find({ name: re });
     return cards;
@@ -42,3 +42,5 @@ exports.getCardsByName = async req => {
     throw boom.boomify(err);
   }
 };
+
+//field: name => req.name { name: "Jane" }

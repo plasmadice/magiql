@@ -11,7 +11,7 @@ const typeDefs = gql`
       cmcMax: Int
       legalities: Format
       rarity: Rarity
-      manaCost: String
+      mana_cost: String
       legendary: Boolean
       type: String
       text: String

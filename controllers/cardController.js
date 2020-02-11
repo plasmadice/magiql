@@ -24,9 +24,40 @@ const getCard = async req => {
 };
 
 const getCards = async req => {
-  console.log(req);
-  const name = new RegExp(req.name, "i");
-  return await Card.find({ name: name, cmc: req.cmc });
+  // clones arguments and formats them into query
+  let query = { ...req };
+
+  // name
+  if (req.name) query.name = new RegExp(req.name, "i");
+
+  // cmc min and max
+  let cmcQuery = {};
+  if (req.cmcMin) {
+    cmcQuery.$gte = req.cmcMin;
+    delete query.cmcMin;
+  }
+  if (req.cmcMax) {
+    cmcQuery.$lte = req.cmcMax;
+    delete query.cmcMax;
+  }
+  if (Object.keys(cmcQuery).length) query.cmc = cmcQuery;
+
+  // legalities
+  if (query.legalities) {
+    query[`legalities.${req.legalities}`] = "legal";
+    delete query.legalities;
+  }
+
+  console.log(req.mana_cost);
+
+  console.log(query);
+  if (query.mana_cost) {
+    delete query.mana_cost;
+  }
+  console.log(query);
+
+  // delete query.legalities;
+  return await Card.find(query);
 };
 
 const getCardsByName = async req => {

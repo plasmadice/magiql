@@ -8,7 +8,7 @@ const cardLoader = new DataLoader(key => {
 const batchCardLoader = new DataLoader(keys => {});
 
 // Get All Cards ... maybe don't use this
-exports.getAllCards = async () => {
+const getAllCards = async () => {
   try {
     const cards = await Card.find();
     return cards;
@@ -17,26 +17,21 @@ exports.getAllCards = async () => {
   }
 };
 
-// Get single Card by ID
-exports.getCard = async req => {
-  try {
-    const id = req.params === undefined ? req.id : req.params.id; // example with REST using routes
-    const card = await Card.findById(id);
-    return card;
-  } catch (err) {
-    throw boom.boomify(err);
-  }
-};
-
 // TODO:  will be remedied by indexing .id
-exports.getCard = async req => {
+// Get single Card by ID
+const getCard = async req => {
   return await Card.findOne({ id: req.id });
 };
 
-exports.getCardsByName = async req => {
+const getCardsByName = async req => {
   const cardName = req.params === undefined ? req.name : req.params.name; // example with REST using routes
   const re = new RegExp(cardName, "i");
   return await Card.find({ name: re });
 };
 
 //field: name => req.name { name: "Jane" }
+module.exports = {
+  getAllCards,
+  getCard,
+  getCardsByName
+};

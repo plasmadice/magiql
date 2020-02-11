@@ -6,7 +6,8 @@ const { ApolloServer } = require("apollo-server-fastify");
 const schema = require("./graphql_schema");
 
 const server = new ApolloServer({
-  schema: schema
+  schema: schema,
+  context: "Example"
 });
 (async function() {
   fastify.register(server.createHandler());

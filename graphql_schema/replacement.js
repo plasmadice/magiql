@@ -1,11 +1,11 @@
 const { gql } = require("apollo-server");
+const Card = require("../models/Card");
 
 const typeDefs = gql`
   """
   Links related to the card.
   """
   type RelatedLink {
-    _id: ID!
     gatherer: String
     tcgplayer_decks: String
     edhrec: String
@@ -16,7 +16,6 @@ const typeDefs = gql`
   Links leading to places where the card can be purchased
   """
   type PurchaseLink {
-    _id: ID!
     tcgplayer: String
     cardmarket: String
     cardhoarder: String
@@ -26,7 +25,6 @@ const typeDefs = gql`
   Info related to the preview of the card if available
   """
   type Preview {
-    _id: ID!
     source: String
     source_uri: String
     previewed_at: String
@@ -36,7 +34,6 @@ const typeDefs = gql`
   Price of the card in different currencies
   """
   type Prices {
-    _id: ID!
     usd: String
     usd_foil: String
     eur: String
@@ -47,7 +44,6 @@ const typeDefs = gql`
   Legality of this card in different formats
   """
   type Legalities {
-    _id: ID!
     standard: String
     future: String
     historic: String
@@ -67,7 +63,6 @@ const typeDefs = gql`
   Images of the card
   """
   type ImageLink {
-    _id: ID!
     small: String
     normal: String
     large: String
@@ -80,7 +75,6 @@ const typeDefs = gql`
   Cards related to the card
   """
   type RelatedCards {
-    _id: ID!
     id: String!
     object: String!
     component: String!
@@ -93,7 +87,6 @@ const typeDefs = gql`
   Information about the 'other' side of the card
   """
   type MultiFace {
-    _id: ID!
     artist: String
     color_indicator: [String]
     colors: [String]
@@ -117,7 +110,6 @@ const typeDefs = gql`
   A unique card object for every MTG card
   """
   type Card {
-    _id: ID!
     arena_id: Int
     id: ID!
     lang: String!
@@ -208,10 +200,10 @@ const resolverMap = {
 const resolverMap = {
   Query: {
     card(obj, args, context, info) {
-      return find(authors, { id: args.id });
+      return await Card.findOne({id: args.id});
     }
   },
-  Author: {
+  Card: {
     posts(author) {
       return filter(posts, { authorId: author.id });
     }

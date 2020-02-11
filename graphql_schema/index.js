@@ -226,7 +226,7 @@ const RootQuery = new GraphQLObjectType({
         id: { type: GraphQLString }
       },
       async resolve(parent, args) {
-        return await cardController.getCardById(args);
+        return await cardController.getCard(args);
       }
     },
     cards: {

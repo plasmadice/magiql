@@ -1,4 +1,3 @@
-const boom = require("@hapi/boom");
 const Card = require("../models/Card");
 const DataLoader = require("dataloader");
 
@@ -9,7 +8,7 @@ const cardLoader = new DataLoader(key => {
 const batchCardLoader = new DataLoader(keys => {});
 
 // Get All Cards ... maybe don't use this
-exports.getCards = async () => {
+exports.getAllCards = async () => {
   try {
     const cards = await Card.find();
     return cards;
@@ -29,27 +28,15 @@ exports.getCard = async req => {
   }
 };
 
-exports.getCardById = async req => {
-  try {
-    if (req.id) {
-      return await Card.findOne({ id: req.id });
-    } else if (req._id) {
-      return await Card.findOne({ _id: req._id });
-    }
-  } catch (err) {
-    throw boom.boomify(err);
-  }
+// TODO:  will be remedied by indexing .id
+exports.getCard = async req => {
+  return await Card.findOne({ id: req.id });
 };
 
 exports.getCardsByName = async req => {
-  try {
-    const cardName = req.params === undefined ? req.name : req.params.name; // example with REST using routes
-    const re = new RegExp(cardName, "i");
-    const cards = await Card.find({ name: re });
-    return cards;
-  } catch (err) {
-    throw boom.boomify(err);
-  }
+  const cardName = req.params === undefined ? req.name : req.params.name; // example with REST using routes
+  const re = new RegExp(cardName, "i");
+  return await Card.find({ name: re });
 };
 
 //field: name => req.name { name: "Jane" }

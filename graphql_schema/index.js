@@ -233,9 +233,8 @@ const RootQuery = new GraphQLObjectType({
       type: new GraphQLList(cardType),
       description: "Returns card(s) using a name value.",
       args: { name: { type: GraphQLString } },
-      async resolve(parent, args, context) {
-        console.log(context);
-        return await cardController.getCardsByName(args);
+      async resolve(parent, args, context, info) {
+        return await context.db.getCards(args);
       }
     }
   })

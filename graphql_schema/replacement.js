@@ -2,6 +2,48 @@ const { gql } = require("apollo-server");
 const Card = require("../models/Card");
 
 const typeDefs = gql`
+  type Query {
+    card(id: ID!): Card
+    cards(
+      name: String
+      cmc: Int
+      cmcMin: Int
+      cmcMax: Int
+      legalities: Format
+      rarity: Rarity
+      manaCost: String
+      legendary: Boolean
+      type: String
+      text: String
+      loyalty: String
+      foil: Boolean
+      colors: String
+    ): [Card]
+  }
+
+  enum Rarity {
+    common
+    uncommon
+    rare
+    mythic
+  }
+
+  enum Format {
+    standard
+    future
+    historic
+    pioneer
+    modern
+    legacy
+    pauper
+    vintage
+    penny
+    commander
+    brawl
+    duel
+    oldschool
+  }
+
   """
   Links related to the card.
   """
@@ -184,30 +226,23 @@ const typeDefs = gql`
   }
 `;
 
-const resolverMap = {
-  Query: {
-    author(obj, args, context, info) {
-      return find(authors, { id: args.id });
-    }
-  },
-  Author: {
-    posts(author) {
-      return filter(posts, { authorId: author.id });
-    }
-  }
-};
-
-const resolverMap = {
+const resolvers = {
   Query: {
     card(obj, args, context, info) {
-      return await Card.findOne({id: args.id});
-    }
-  },
-  Card: {
-    posts(author) {
-      return filter(posts, { authorId: author.id });
+      return context.db.getCard(args.id);
+    },
+    cards(obj, args, context, info) {
+      return context.db.getCards(args);
     }
   }
+  // Card: {
+  //   posts(author) {
+  //     return filter(posts, { authorId: author.id });
+  //   }
+  // }
 };
 
-module.exports = typeDefs;
+module.exports = {
+  typeDefs,
+  resolvers
+};

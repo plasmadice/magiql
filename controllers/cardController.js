@@ -23,6 +23,12 @@ const getCard = async req => {
   return await Card.findOne({ id: req.id });
 };
 
+const getCards = async req => {
+  console.log(req);
+  const name = new RegExp(req.name, "i");
+  return await Card.find({ name: name, cmc: req.cmc });
+};
+
 const getCardsByName = async req => {
   const cardName = req.params === undefined ? req.name : req.params.name; // example with REST using routes
   const re = new RegExp(cardName, "i");
@@ -33,5 +39,6 @@ const getCardsByName = async req => {
 module.exports = {
   getAllCards,
   getCard,
+  getCards,
   getCardsByName
 };

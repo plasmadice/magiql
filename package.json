@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@hapi/boom": "^9.0.0",
+    "apollo-server": "^2.10.0",
     "apollo-server-fastify": "^2.10.0",
     "boom": "^7.3.0",
     "dataloader": "^2.0.0",

@@ -8,6 +8,8 @@ var schemas = require("./schemas");
 
 // const readyData = data.map(item => {
 //   item.json = JSON.stringify(item);
+//   item.colors = item.colors.sort();
+//   item.color_identity = item.color_identity.sort();
 //   return item;
 // });
 
@@ -16,90 +18,114 @@ mongoose.connect(DB_CONNECT, {
   useUnifiedTopology: true
 });
 
-var legalitiesSchema = new mongoose.Schema({
-  standard: String,
-  future: String,
-  historic: String,
-  pioneer: String,
-  modern: String,
-  legacy: String,
-  pauper: String,
-  vintage: String,
-  penny: String,
-  commander: String,
-  brawl: String,
-  duel: String,
-  oldschool: String
-});
+var legalitiesSchema = new mongoose.Schema(
+  {
+    standard: String,
+    future: String,
+    historic: String,
+    pioneer: String,
+    modern: String,
+    legacy: String,
+    pauper: String,
+    vintage: String,
+    penny: String,
+    commander: String,
+    brawl: String,
+    duel: String,
+    oldschool: String
+  },
+  { _id: false }
+);
 
-var imageLinkSchema = new mongoose.Schema({
-  small: String,
-  normal: String,
-  large: String,
-  art_crop: String,
-  border_crop: String,
-  png: String
-});
+var imageLinkSchema = new mongoose.Schema(
+  {
+    small: String,
+    normal: String,
+    large: String,
+    art_crop: String,
+    border_crop: String,
+    png: String
+  },
+  { _id: false }
+);
 
-var pricesSchema = new mongoose.Schema({
-  usd: String,
-  usd_foil: String,
-  eur: String,
-  tix: String
-});
+var pricesSchema = new mongoose.Schema(
+  {
+    usd: String,
+    usd_foil: String,
+    eur: String,
+    tix: String
+  },
+  { _id: false }
+);
 
-var purchaseLinkSchema = new mongoose.Schema({
-  tcgplayer: String,
-  cardmarket: String,
-  cardhoarder: String
-});
+var purchaseLinkSchema = new mongoose.Schema(
+  {
+    tcgplayer: String,
+    cardmarket: String,
+    cardhoarder: String
+  },
+  { _id: false }
+);
 
-var relatedLinkSchema = new mongoose.Schema({
-  gatherer: String,
-  tcgplayer_decks: String,
-  edhrec: String,
-  mtgtop8: String
-});
+var relatedLinkSchema = new mongoose.Schema(
+  {
+    gatherer: String,
+    tcgplayer_decks: String,
+    edhrec: String,
+    mtgtop8: String
+  },
+  { _id: false }
+);
 
-var previewSchema = new mongoose.Schema({
-  source: String,
-  source_uri: String,
-  previewed_at: String
-});
+var previewSchema = new mongoose.Schema(
+  {
+    source: String,
+    source_uri: String,
+    previewed_at: String
+  },
+  { _id: false }
+);
 
-var multiFaceSchema = new mongoose.Schema({
-  artist: String,
-  color_indicator: { type: [String], default: undefined },
-  colors: { type: [String], default: undefined }, // if empty [] === colorless else (null or missing) === not pertinent
-  flavor_text: String,
-  illustration_id: String,
-  image_uris: imageLinkSchema,
-  loyalty: String,
-  mana_cost: String,
-  name: String,
-  object: String,
-  oracle_text: String,
-  power: String,
-  printed_name: String,
-  printed_type_line: String,
-  toughness: String,
-  type_line: String,
-  watermark: String
-});
+var multiFaceSchema = new mongoose.Schema(
+  {
+    artist: String,
+    color_indicator: { type: [String], default: undefined },
+    colors: { type: [String], default: undefined }, // if empty [] === colorless else (null or missing) === not pertinent
+    flavor_text: String,
+    illustration_id: String,
+    image_uris: imageLinkSchema,
+    loyalty: String,
+    mana_cost: String,
+    name: String,
+    object: String,
+    oracle_text: String,
+    power: String,
+    printed_name: String,
+    printed_type_line: String,
+    toughness: String,
+    type_line: String,
+    watermark: String
+  },
+  { _id: false }
+);
 
-var relatedCardsSchema = new mongoose.Schema({
-  id: { type: String, required: true },
-  object: { type: String, required: true },
-  component: { type: String, required: true },
-  name: { type: String, required: true },
-  type_line: { type: String, required: true },
-  uri: { type: String, required: true }
-});
+var relatedCardsSchema = new mongoose.Schema(
+  {
+    id: { type: String, required: true },
+    object: { type: String, required: true },
+    component: { type: String, required: true },
+    name: { type: String, required: true },
+    type_line: { type: String, required: true },
+    uri: { type: String, required: true }
+  },
+  { _id: false }
+);
 
 var cardSchema = new mongoose.Schema({
   // Core Card Fields
   arena_id: Number,
-  id: { type: String, required: true },
+  id: { type: String, required: true, index: true },
   lang: { type: String, required: true },
   mtgo_id: Number,
   mtgo_foil_id: Number,

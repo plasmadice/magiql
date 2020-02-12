@@ -6,8 +6,7 @@ const cardController = require("./controllers/cardController");
 const { getCard, getCards, getCardsByName, getAllCards } = cardController;
 
 // Import GraphQL Schema
-const schema = require("./graphql_schema");
-const { typeDefs, resolvers } = require("./graphql_schema/replacement");
+const { typeDefs, resolvers } = require("./graphql_schema");
 
 const server = new ApolloServer({
   typeDefs,

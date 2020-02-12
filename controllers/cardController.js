@@ -42,19 +42,50 @@ const getCards = async req => {
   }
   if (Object.keys(cmcQuery).length) query.cmc = cmcQuery;
 
+  // power min and max
+  let powerQuery = {};
+  if (req.powerMin) {
+    powerQuery.$gte = req.powerMin;
+    delete query.powerMin;
+  }
+  if (req.powerMax) {
+    powerQuery.$lte = req.powerMax;
+    delete query.powerMax;
+  }
+  if (Object.keys(powerQuery).length) query.power = powerQuery;
+
+  // toughness min and max
+  let toughnessQuery = {};
+  if (req.toughnessMin) {
+    toughnessQuery.$gte = req.toughnessMin;
+    delete query.toughnessMin;
+  }
+  if (req.toughnessMax) {
+    toughnessQuery.$lte = req.toughnessMax;
+    delete query.toughnessMax;
+  }
+  if (Object.keys(toughnessQuery).length) query.toughness = toughnessQuery;
+
   // legalities
   if (query.legalities) {
     query[`legalities.${req.legalities}`] = "legal";
     delete query.legalities;
   }
 
-  console.log(req.mana_cost);
+  // Type TODO: make better regex
+  if (query.type_line) query.type_line = new RegExp(req.type_line, "i");
 
-  console.log(query);
-  if (query.mana_cost) {
-    delete query.mana_cost;
-  }
-  console.log(query);
+  // Oracle Text
+  if (query.oracle_text) query.oracle_text = new RegExp(req.oracle_text, "i");
+
+  // Colors TODO: Re-add database (colors are now pre-sorted)
+  if (query.colors) query.colors = query.colors.sort();
+
+  // Color Identity TODO: Re-add database (color_identity are now pre-sorted)
+  if (query.color_identity) query.color_identity = query.color_identity.sort();
+
+  // Set
+  if (query.set) query.set = new RegExp(query.set, "i");
 
   // delete query.legalities;
   return await Card.find(query);

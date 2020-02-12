@@ -1,246 +1,263 @@
-// Import External Dependancies
-const graphql = require("graphql");
+const { gql } = require("apollo-server");
+const Card = require("../models/Card");
 
-// Destructure GraphQL functions
-const {
-  GraphQLSchema,
-  GraphQLObjectType,
-  GraphQLString,
-  GraphQLID,
-  GraphQLList,
-  GraphQLInt,
-  GraphQLBoolean
-} = graphql;
+const typeDefs = gql`
+  type Query {
+    card(id: ID!): Card
+    cards(
+      name: String
+      cmc: Int
+      cmcMin: Int
+      cmcMax: Int
+      legalities: Format
+      rarity: Rarity
+      mana_cost: String
+      type_line: String
+      oracle_text: String
+      loyalty: String
+      power: String
+      powerMin: String
+      powerMax: String
+      toughness: String
+      toughnessMin: String
+      toughnessMax: String
+      foil: Boolean
+      colors: [Color]
+      color_identity: [Color]
+      set: String
+    ): [Card]
+  }
 
-// Import Controllers
-const cardController = require("../controllers/cardController");
+  enum Rarity {
+    common
+    uncommon
+    rare
+    mythic
+  }
 
-const relatedLinkType = new GraphQLObjectType({
-  name: "RelatedLink",
-  description: "Links related to the card.",
-  fields: () => ({
-    _id: { type: GraphQLID },
-    gatherer: { type: GraphQLString },
-    tcgplayer_decks: { type: GraphQLString },
-    edhrec: { type: GraphQLString },
-    mtgtop8: { type: GraphQLString }
-  })
-});
+  enum Format {
+    standard
+    future
+    historic
+    pioneer
+    modern
+    legacy
+    pauper
+    vintage
+    penny
+    commander
+    brawl
+    duel
+    oldschool
+  }
 
-const purchaseLinkType = new GraphQLObjectType({
-  name: "PurchaseLink",
-  description: "Links leading to places where the card can be purchased.",
-  fields: () => ({
-    _id: { type: GraphQLID },
-    tcgplayer: { type: GraphQLString },
-    cardmarket: { type: GraphQLString },
-    cardhoarder: { type: GraphQLString }
-  })
-});
+  enum Color {
+    W
+    U
+    B
+    R
+    G
+  }
 
-const previewType = new GraphQLObjectType({
-  name: "Preview",
-  description: "Info related to the preview of the card if available.",
-  fields: () => ({
-    _id: { type: GraphQLID },
-    source: { type: GraphQLString },
-    source_uri: { type: GraphQLString },
-    previewed_at: { type: GraphQLString }
-  })
-});
+  """
+  Links related to the card.
+  """
+  type RelatedLink {
+    gatherer: String
+    tcgplayer_decks: String
+    edhrec: String
+    mtgtop8: String
+  }
 
-const pricesType = new GraphQLObjectType({
-  name: "Prices",
-  description: "Price of the card in different currencies.",
-  fields: () => ({
-    _id: { type: GraphQLID },
-    usd: { type: GraphQLString },
-    usd_foil: { type: GraphQLString },
-    eur: { type: GraphQLString },
-    tix: { type: GraphQLString }
-  })
-});
+  """
+  Links leading to places where the card can be purchased
+  """
+  type PurchaseLink {
+    tcgplayer: String
+    cardmarket: String
+    cardhoarder: String
+  }
 
-const legalitiesType = new GraphQLObjectType({
-  name: "Legalities",
-  description: "Legality of this card in different formats.",
-  fields: () => ({
-    _id: { type: GraphQLID },
-    standard: { type: GraphQLString },
-    future: { type: GraphQLString },
-    historic: { type: GraphQLString },
-    pioneer: { type: GraphQLString },
-    modern: { type: GraphQLString },
-    legacy: { type: GraphQLString },
-    pauper: { type: GraphQLString },
-    vintage: { type: GraphQLString },
-    penny: { type: GraphQLString },
-    commander: { type: GraphQLString },
-    brawl: { type: GraphQLString },
-    duel: { type: GraphQLString },
-    oldschool: { type: GraphQLString }
-  })
-});
+  """
+  Info related to the preview of the card if available
+  """
+  type Preview {
+    source: String
+    source_uri: String
+    previewed_at: String
+  }
 
-const imageLinkType = new GraphQLObjectType({
-  name: "ImageLink",
-  description: "Images of the card.",
-  fields: () => ({
-    _id: { type: GraphQLID },
-    small: { type: GraphQLString },
-    normal: { type: GraphQLString },
-    large: { type: GraphQLString },
-    art_crop: { type: GraphQLString },
-    border_crop: { type: GraphQLString },
-    png: { type: GraphQLString }
-  })
-});
+  """
+  Price of the card in different currencies
+  """
+  type Prices {
+    usd: String
+    usd_foil: String
+    eur: String
+    tix: String
+  }
 
-const relatedCardsType = new GraphQLObjectType({
-  name: "RelatedCards",
-  description: "Cards related to the card.",
-  fields: () => ({
-    _id: { type: GraphQLID },
-    id: { type: GraphQLString },
-    object: { type: GraphQLString },
-    component: { type: GraphQLString },
-    name: { type: GraphQLString },
-    type_line: { type: GraphQLString },
-    uri: { type: GraphQLString }
-  })
-});
+  """
+  Legality of this card in different formats
+  """
+  type Legalities {
+    standard: String
+    future: String
+    historic: String
+    pioneer: String
+    modern: String
+    legacy: String
+    pauper: String
+    vintage: String
+    penny: String
+    commander: String
+    brawl: String
+    duel: String
+    oldschool: String
+  }
 
-const multiFaceType = new GraphQLObjectType({
-  name: "MultiFace",
-  description: "Information about the 'other' side of the card.",
-  fields: () => ({
-    _id: { type: GraphQLID },
-    artist: { type: GraphQLString },
-    color_indicator: { type: new GraphQLList(GraphQLString) },
-    colors: { type: new GraphQLList(GraphQLString) },
-    flavor_text: { type: GraphQLString },
-    illustration_id: { type: GraphQLString },
-    image_uris: { type: imageLinkType },
-    loyalty: { type: GraphQLString },
-    mana_cost: { type: GraphQLString },
-    name: { type: GraphQLString },
-    object: { type: GraphQLString },
-    oracle_text: { type: GraphQLString },
-    power: { type: GraphQLString },
-    printed_name: { type: GraphQLString },
-    printed_type_line: { type: GraphQLString },
-    toughness: { type: GraphQLString },
-    type_line: { type: GraphQLString },
-    watermark: { type: GraphQLString }
-  })
-});
+  """
+  Images of the card
+  """
+  type ImageLink {
+    small: String
+    normal: String
+    large: String
+    art_crop: String
+    border_crop: String
+    png: String
+  }
 
-// Define Object Types
-const cardType = new GraphQLObjectType({
-  name: "Card",
-  description: "A unique card object for every MTG card",
-  fields: () => ({
-    _id: { type: GraphQLID },
-    arena_id: { type: GraphQLInt },
-    id: { type: GraphQLString },
-    lang: { type: GraphQLString },
-    mtgo_id: { type: GraphQLInt },
-    mtgo_foil_id: { type: GraphQLInt },
-    multiverse_ids: { type: new GraphQLList(GraphQLInt) },
-    tcgplayer_id: { type: GraphQLInt },
-    object: { type: GraphQLString },
-    oracle_id: { type: GraphQLString },
-    prints_search_uri: { type: GraphQLString },
-    rulings_uri: { type: GraphQLString },
-    scryfall_uri: { type: GraphQLString },
-    uri: { type: GraphQLString },
-    all_parts: { type: new GraphQLList(relatedCardsType) },
-    card_faces: { type: new GraphQLList(multiFaceType) },
-    cmc: { type: GraphQLInt },
-    colors: { type: new GraphQLList(GraphQLString) },
-    color_identity: { type: new GraphQLList(GraphQLString) },
-    edhrec_rank: { type: GraphQLInt },
-    foil: { type: GraphQLBoolean },
-    hand_modifier: { type: GraphQLString },
-    layout: { type: GraphQLString },
-    legalities: { type: legalitiesType },
-    life_modifier: { type: GraphQLString },
-    loyalty: { type: GraphQLString },
-    mana_cost: { type: GraphQLString },
-    name: { type: GraphQLString },
-    nonfoil: { type: GraphQLString },
-    oracle_text: { type: GraphQLString },
-    oversized: { type: GraphQLBoolean },
-    power: { type: GraphQLString },
-    reserved: { type: GraphQLBoolean },
-    toughness: { type: GraphQLString },
-    type_line: { type: GraphQLString },
-    artist: { type: GraphQLString },
-    booster: { type: GraphQLBoolean },
-    border_color: { type: GraphQLString },
-    card_back_id: { type: GraphQLString },
-    collector_number: { type: GraphQLString },
-    flavor_text: { type: GraphQLString },
-    frame_effects: { type: new GraphQLList(GraphQLString) },
-    frame: { type: GraphQLString },
-    full_art: { type: GraphQLBoolean },
-    games: { type: new GraphQLList(GraphQLString) },
-    highres_image: { type: GraphQLBoolean },
-    illustration_id: { type: GraphQLString },
-    image_uris: { type: imageLinkType },
-    preview: { type: previewType },
-    prices: { type: pricesType },
-    printed_name: { type: GraphQLString },
-    printed_text: { type: GraphQLString },
-    printed_type_line: { type: GraphQLString },
-    promo_type: { type: new GraphQLList(GraphQLString) },
-    purchase_uris: { type: purchaseLinkType },
-    rarity: { type: GraphQLString },
-    related_uris: { type: relatedLinkType },
-    released_at: { type: GraphQLString },
-    reprint: { type: GraphQLBoolean },
-    scryfall_set_uri: { type: GraphQLString },
-    set_name: { type: GraphQLString },
-    set_search_uri: { type: GraphQLString },
-    set_type: { type: GraphQLString },
-    set_uri: { type: GraphQLString },
-    set: { type: GraphQLString },
-    story_spotlight: { type: GraphQLBoolean },
-    textless: { type: GraphQLBoolean },
-    variation: { type: GraphQLBoolean },
-    variation_of: { type: GraphQLString },
-    watermark: { type: GraphQLString },
-    json: { type: GraphQLString }
-  })
-});
+  """
+  Cards related to the card
+  """
+  type RelatedCards {
+    id: String!
+    object: String!
+    component: String!
+    name: String!
+    type_line: String!
+    uri: String!
+  }
 
-// Define Root Query
-const RootQuery = new GraphQLObjectType({
-  name: "RootQueryType",
-  fields: () => ({
-    card: {
-      type: cardType,
-      description: "Returns a single card using one of it's IDs (id && _id)",
-      args: {
-        _id: { type: GraphQLID },
-        id: { type: GraphQLString }
-      },
-      async resolve(parent, args) {
-        return await cardController.getCard(args);
-      }
+  """
+  Information about the 'other' side of the card
+  """
+  type MultiFace {
+    artist: String
+    color_indicator: [String]
+    colors: [String]
+    flavor_text: String
+    illustration_id: String
+    image_uris: ImageLink
+    loyalty: String
+    mana_cost: String
+    name: String
+    object: String
+    oracle_text: String
+    power: String
+    printed_name: String
+    printed_type_line: String
+    toughness: String
+    type_line: String
+    watermark: String
+  }
+
+  """
+  A unique card object for every MTG card
+  """
+  type Card {
+    arena_id: Int
+    id: ID!
+    lang: String!
+    mtgo_id: Int
+    mtgo_foil_id: Int
+    multiverse_ids: [Int]
+    tcgplayer_id: Int
+    object: String!
+    oracle_id: String!
+    prints_search_uri: String!
+    rulings_uri: String!
+    scryfall_uri: String!
+    uri: String!
+    all_parts: [RelatedCards]
+    card_faces: [MultiFace]
+    cmc: Int!
+    colors: [String]
+    color_identity: [String]!
+    edhrec_rank: Int
+    foil: Boolean!
+    hand_modifier: String
+    layout: String!
+    legalities: Legalities!
+    life_modifier: String
+    loyalty: String
+    mana_cost: String
+    name: String!
+    nonfoil: String!
+    oracle_text: String
+    oversized: Boolean!
+    power: String
+    reserved: Boolean!
+    toughness: String
+    type_line: String!
+    artist: String
+    booster: Boolean!
+    border_color: String!
+    card_back_id: String!
+    collector_number: String!
+    digital: Boolean!
+    flavor_text: String
+    frame_effects: [String]
+    frame: String!
+    full_art: Boolean!
+    games: [String]!
+    highres_image: Boolean!
+    illustration_id: String
+    image_uris: ImageLink
+    preview: Preview
+    prices: Prices
+    printed_name: String
+    printed_text: String
+    printed_type_line: String
+    promo_type: [String]
+    purchase_uris: PurchaseLink
+    rarity: String!
+    related_uris: RelatedLink!
+    released_at: String!
+    reprint: Boolean!
+    scryfall_set_uri: String!
+    set_name: String!
+    set_search_uri: String!
+    set_type: String!
+    set_uri: String!
+    set: String!
+    story_spotlight: Boolean!
+    textless: Boolean!
+    variation: Boolean!
+    variation_of: String
+    watermark: String
+    json: String!
+  }
+`;
+
+const resolvers = {
+  Query: {
+    card(obj, args, context, info) {
+      return context.db.getCard(args.id);
     },
-    cards: {
-      type: new GraphQLList(cardType),
-      description: "Returns card(s) using a name value.",
-      args: { name: { type: GraphQLString } },
-      async resolve(parent, args, context, info) {
-        return await context.db.getCards(args);
-      }
+    cards(obj, args, context, info) {
+      return context.db.getCards(args);
     }
-  })
-});
+  }
+  // Card: {
+  //   posts(author) {
+  //     return filter(posts, { authorId: author.id });
+  //   }
+  // }
+};
 
-// Export the schema
-module.exports = new GraphQLSchema({
-  query: RootQuery
-});
+module.exports = {
+  typeDefs,
+  resolvers
+};

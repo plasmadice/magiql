@@ -5,23 +5,25 @@ const DB_CONNECT = process.env.DB_CONNECT;
 var schemas = require("./schemas");
 const environment = process.env.NODE_ENV !== "production";
 
-const data = require("./scryfall-default-cards.json");
+// const data = require("./scryfall-default-cards.json");
+const data = require("./AllPrices.json");
+console.log(data["000031ff-f095-52c5-98a1-35bdb5e18a5b"]);
 // const data = require("./scryfall-all-cards.json");
 
-const readyData = data.map(item => {
-  // item.json = JSON.stringify(item);
-  if (item.colors) {
-    item.colors = item.colors.sort();
-  }
+// const readyData = data.map(item => {
+//   // item.json = JSON.stringify(item);
+//   if (item.colors) {
+//     item.colors = item.colors.sort();
+//   }
 
-  if (item.color_identity) {
-    item.color_identity = item.color_identity.sort();
-  }
-  return item;
-});
+//   if (item.color_identity) {
+//     item.color_identity = item.color_identity.sort();
+//   }
+//   return item;
+// });
 
 // const fs = require("fs");
-// fs.writeFile("test.json", JSON.stringify(readyData[25000]), () => {});
+// fs.writeFile("test.json", JSON.stringify(readyData[0]), () => {});
 
 mongoose.connect(DB_CONNECT, {
   useNewUrlParser: true,

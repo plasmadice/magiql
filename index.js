@@ -25,7 +25,7 @@ const server = new ApolloServer({
 });
 (async function() {
   fastify.register(server.createHandler());
-  await fastify.listen(PORT, (err, address) => {
+  await fastify.listen(PORT, "0.0.0.0", (err, address) => {
     if (err) {
       fastify.log.error(err);
       process.exit(1);

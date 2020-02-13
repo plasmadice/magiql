@@ -3,19 +3,30 @@ var mongoose = require("mongoose");
 require("dotenv").config();
 const DB_CONNECT = process.env.DB_CONNECT;
 var schemas = require("./schemas");
+const environment = process.env.NODE_ENV !== "production";
 
 // const data = require("./scryfall-default-cards.json");
+const data = require("./scryfall-all-cards.json");
 
-// const readyData = data.map(item => {
-//   item.json = JSON.stringify(item);
-//   item.colors = item.colors.sort();
-//   item.color_identity = item.color_identity.sort();
-//   return item;
-// });
+const readyData = data.map(item => {
+  // item.json = JSON.stringify(item);
+  if (item.colors) {
+    item.colors = item.colors.sort();
+  }
+
+  if (item.color_identity) {
+    item.color_identity = item.color_identity.sort();
+  }
+  return item;
+});
+
+const fs = require("fs");
+fs.writeFile("test.json", JSON.stringify(readyData[25000]), () => {});
 
 mongoose.connect(DB_CONNECT, {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  autoIndex: environment
 });
 
 var legalitiesSchema = new mongoose.Schema(
@@ -153,7 +164,7 @@ var cardSchema = new mongoose.Schema({
   life_modifier: String,
   loyalty: String,
   mana_cost: String,
-  name: { type: String, required: true },
+  name: { type: String, required: true, index: true },
   nonfoil: { type: String, required: true },
   oracle_text: String,
   oversized: { type: Boolean, required: true },
@@ -178,12 +189,12 @@ var cardSchema = new mongoose.Schema({
   illustration_id: String,
   image_uris: imageLinkSchema,
   preview: previewSchema,
-  prices: pricesSchema,
+  // prices: pricesSchema,
   printed_name: String,
   printed_text: String,
   printed_type_line: String,
   promo_types: { type: [String], default: undefined },
-  purchase_uris: purchaseLinkSchema,
+  // purchase_uris: purchaseLinkSchema,
   rarity: { type: String, required: true },
   related_uris: { type: relatedLinkSchema, required: true },
   released_at: { type: String, required: true },
@@ -198,18 +209,17 @@ var cardSchema = new mongoose.Schema({
   textless: { type: Boolean, required: true },
   variation: { type: Boolean, required: true },
   variation_of: String,
-  watermark: String,
-  json: { type: String, required: true }
+  watermark: String
+  // json: { type: String, required: true }
 });
 
-var db = mongoose.connection;
-db.on("error", console.error.bind(console, "connection error:"));
-db.once("open", function() {
-  console.log("Connected to MongoDB server");
-  // we're connected!
-});
+// var db = mongoose.connection;
+// db.on("error", console.error.bind(console, "connection error:"));
+// db.once("open", function() {
+//   console.log("Connected to MongoDB server");
+// });
 
-var Card = mongoose.model("Card", cardSchema);
+// var Card = mongoose.model("Card", cardSchema);
 
 // Card.insertMany(readyData, (err, documents) => {
 //   if (err) console.error(err);

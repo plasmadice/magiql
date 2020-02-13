@@ -1,7 +1,3 @@
-// const fastify = require("fastify")({
-//   logger: true
-// });
-
 const Fastify = require("fastify");
 const fastify = Fastify();
 const mongoose = require("mongoose");

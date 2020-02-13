@@ -1,20 +1,15 @@
 const Card = require("../models/Card");
-const DataLoader = require("dataloader");
+// const DataLoader = require("dataloader");
 
-const cardLoader = new DataLoader(key => {
-  return this.getCard(key);
-});
+// const cardLoader = new DataLoader(key => {
+//   return this.getCard(key);
+// });
 
-const batchCardLoader = new DataLoader(keys => {});
+// const batchCardLoader = new DataLoader(keys => {});
 
 // Get All Cards ... maybe don't use this
 const getAllCards = async () => {
-  try {
-    const cards = await Card.find();
-    return cards;
-  } catch (err) {
-    throw boom.boomify(err);
-  }
+  return await Card.find();
 };
 
 // TODO:  will be remedied by indexing .id

@@ -215,12 +215,12 @@ const typeDefs = gql`
     illustration_id: String
     image_uris: ImageLink
     preview: Preview
-    prices: Prices
+    # prices: Prices
     printed_name: String
     printed_text: String
     printed_type_line: String
     promo_type: [String]
-    purchase_uris: PurchaseLink
+    # purchase_uris: PurchaseLink
     rarity: String!
     related_uris: RelatedLink!
     released_at: String!

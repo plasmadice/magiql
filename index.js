@@ -8,6 +8,7 @@ const { typeDefs, resolvers } = require("./graphql_schema");
 // Import database functions
 const { getCard, getCards, getCardsByName, getAllCards } = cardController;
 const PORT = process.env.PORT || 4000;
+const ADDRESS = process.env.NODE_ENV === "production" ? "0.0.0.0" : "localhost";
 
 const server = new ApolloServer({
   typeDefs,
@@ -25,7 +26,7 @@ const server = new ApolloServer({
 });
 (async function() {
   fastify.register(server.createHandler());
-  await fastify.listen(PORT, "0.0.0.0", (err, address) => {
+  await fastify.listen(PORT, ADDRESS, (err, address) => {
     if (err) {
       fastify.log.error(err);
       process.exit(1);

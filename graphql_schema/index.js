@@ -1,5 +1,4 @@
 const { gql } = require("apollo-server");
-const Card = require("../models/Card");
 
 const typeDefs = gql`
   type Query {

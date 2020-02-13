@@ -5,8 +5,8 @@ const DB_CONNECT = process.env.DB_CONNECT;
 var schemas = require("./schemas");
 const environment = process.env.NODE_ENV !== "production";
 
-// const data = require("./scryfall-default-cards.json");
-const data = require("./scryfall-all-cards.json");
+const data = require("./scryfall-default-cards.json");
+// const data = require("./scryfall-all-cards.json");
 
 const readyData = data.map(item => {
   // item.json = JSON.stringify(item);
@@ -20,8 +20,8 @@ const readyData = data.map(item => {
   return item;
 });
 
-const fs = require("fs");
-fs.writeFile("test.json", JSON.stringify(readyData[25000]), () => {});
+// const fs = require("fs");
+// fs.writeFile("test.json", JSON.stringify(readyData[25000]), () => {});
 
 mongoose.connect(DB_CONNECT, {
   useNewUrlParser: true,

@@ -243,7 +243,7 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     card(obj, args, context, info) {
-      return context.db.getCard(args.id);
+      return context.db.getCard(args);
     },
     cards(obj, args, context, info) {
       return context.db.getCards(args);
